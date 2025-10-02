@@ -1,12 +1,16 @@
 package co.edu.uniquindio.fx10.controllers;
 
+import co.edu.uniquindio.fx10.App;
 import co.edu.uniquindio.fx10.models.Producto;
 import co.edu.uniquindio.fx10.repositories.ProductoRepository;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-import javafx.event.ActionEvent;
-
+import javafx.stage.Stage;
+import java.io.IOException;
 
 public class FormularioProductoController {
 
@@ -26,15 +30,15 @@ public class FormularioProductoController {
     private TextField txtStock;
 
     private ProductoRepository productoRepository;
-    private DashboardController dashboardController;
+    private Stage mainStage;
 
     @FXML
     public void initialize() {
         productoRepository = ProductoRepository.getInstancia();
     }
 
-    public void setDashboardController(DashboardController dashboardController) {
-        this.dashboardController = dashboardController;
+    public void setMainStage(Stage stage) {
+        this.mainStage = stage;
     }
 
     @FXML
@@ -55,12 +59,7 @@ public class FormularioProductoController {
 
             mostrarAlerta("Éxito", "Producto creado correctamente", Alert.AlertType.INFORMATION);
 
-            if (dashboardController != null) {
-                dashboardController.cargarListadoProductos();
-            } else {
-                mostrarAlerta("Error de Navegación", "Dashboard Controller no inyectado. No se puede volver al listado.", Alert.AlertType.ERROR);
-            }
-
+            volverAlDashboard();
 
         } catch (NumberFormatException e) {
             mostrarAlerta("Error de formato", "El precio y/o stock deben ser números válidos.", Alert.AlertType.ERROR);
@@ -69,13 +68,31 @@ public class FormularioProductoController {
 
     @FXML
     private void onCancelar() {
-        if (dashboardController != null) {
-            dashboardController.cargarListadoProductos();
-        } else {
-            mostrarAlerta("Error", "No se puede volver al listado.", Alert.AlertType.ERROR);
-        }
+        volverAlDashboard();
     }
 
+    private void volverAlDashboard() {
+        if (mainStage == null) {
+            mostrarAlerta("Error", "No se puede volver al Dashboard.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("/co/edu/uniquindio/fx10/vista/Dashboard.fxml"));
+            Parent root = loader.load();
+
+            DashboardController controller = loader.getController();
+            controller.setMainStage(mainStage);
+
+            Scene scene = new Scene(root, 900, 600);
+            mainStage.setScene(scene);
+            mainStage.setTitle("Sistema de Gestión de Productos");
+
+        } catch (IOException e) {
+            mostrarAlerta("Error", "No se pudo cargar el Dashboard.", Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
+    }
 
     private boolean validarCampos() {
         if (txtCodigo.getText().trim().isEmpty() ||

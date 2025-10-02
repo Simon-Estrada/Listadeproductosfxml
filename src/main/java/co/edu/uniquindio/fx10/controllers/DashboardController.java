@@ -4,73 +4,57 @@ import co.edu.uniquindio.fx10.App;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import java.io.IOException;
 
 public class DashboardController {
 
-    @FXML
-    private VBox contenedorPrincipal;
+    private Stage mainStage;
 
-    @FXML
-    private Label lblTitulo;
-
-    @FXML
-    private VBox contenedorDinamico;
-
-    @FXML
-    public void initialize() {
-        if(contenedorPrincipal != null){
-            cargarListadoProductos();
-        }
+    public void setMainStage(Stage stage) {
+        this.mainStage = stage;
     }
+
     @FXML
     private void onShowList(){
-        cargarListadoProductos();
+        cargarEscena("/co/edu/uniquindio/fx10/vista/ListadoProducto.fxml", "Listado de Productos");
     }
+
     @FXML
     private void onCrearProducto() {
-        if (contenedorDinamico == null) {
-            mostrarAlerta("Error", "Contenedor principal no configurado.", Alert.AlertType.ERROR);
+        cargarEscena("/co/edu/uniquindio/fx10/vista/FormularioProducto.fxml", "Crear Producto");
+    }
+
+    private void cargarEscena(String fxmlPath, String titulo) {
+        if (mainStage == null) {
+            mostrarAlerta("Error", "La ventana principal no está configurada.", Alert.AlertType.ERROR);
             return;
         }
 
         try {
-            FXMLLoader loader = new FXMLLoader(App.class.getResource("/co/edu/uniquindio/fx10/vista/FormularioProducto.fxml"));
-            Parent formulario = loader.load();
+            FXMLLoader loader = new FXMLLoader(App.class.getResource(fxmlPath));
+            Parent root = loader.load();
 
-            FormularioProductoController controller = loader.getController();
-            controller.setDashboardController(this);
+            Object controller = loader.getController();
 
-            contenedorDinamico.getChildren().clear();
-            contenedorDinamico.getChildren().add(formulario);
+            if (controller instanceof FormularioProductoController) {
+                ((FormularioProductoController) controller).setMainStage(mainStage);
+            } else if (controller instanceof ListadoProductoController) {
+                ((ListadoProductoController) controller).setMainStage(mainStage);
+            }
+
+            Scene scene = new Scene(root, 900, 600);
+            mainStage.setScene(scene);
+            mainStage.setTitle(titulo);
 
         } catch (IOException e) {
-            mostrarAlerta("Error", "No se pudo cargar el formulario", Alert.AlertType.ERROR);
+            mostrarAlerta("Error de Carga", "No se pudo cargar la escena: " + fxmlPath, Alert.AlertType.ERROR);
             e.printStackTrace();
         }
     }
 
-    public void cargarListadoProductos() {
-
-        if( contenedorDinamico == null){
-            System.err.println("Error: contenedorDinamico es null");
-            return;
-        }
-        try {
-            FXMLLoader loader = new FXMLLoader(App.class.getResource("/co/edu/uniquindio/fx10/vista/ListadoProducto.fxml"));
-            Parent listado = loader.load();
-
-
-            contenedorDinamico.getChildren().clear();
-            contenedorDinamico.getChildren().add(listado);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);

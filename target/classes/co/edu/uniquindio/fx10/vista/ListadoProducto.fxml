@@ -16,12 +16,17 @@
         <Insets top="30" right="30" bottom="30" left="30"/>
     </padding>
 
-    <!-- Encabezado -->
-    <Label text="Listado de Productos" style="-fx-text-fill: #2c3e50;">
-        <font>
-            <Font name="System Bold" size="28"/>
-        </font>
-    </Label>
+    <!-- Encabezado con botón de volver -->
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Button text="← Volver al Dashboard" onAction="#onVolverDashboard"
+                style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 8 16; -fx-cursor: hand; -fx-background-radius: 5;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="Listado de Productos" style="-fx-text-fill: #2c3e50;">
+            <font>
+                <Font name="System Bold" size="28"/>
+            </font>
+        </Label>
+    </HBox>
 
     <!-- Tabla de productos -->
     <VBox VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
@@ -52,6 +57,12 @@
             <VBox.margin>
                 <Insets top="15"/>
             </VBox.margin>
+            <Button text="+ Nuevo Producto" onAction="#onCrearProducto"
+                    style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 8 16; -fx-cursor: hand; -fx-background-radius: 5;">
+                <font>
+                    <Font name="System Bold" size="13"/>
+                </font>
+            </Button>
             <Button fx:id="btnEliminar" text="Eliminar Producto" onAction="#onEliminarProducto"
                     style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 8 16; -fx-cursor: hand; -fx-background-radius: 5;"/>
         </HBox>

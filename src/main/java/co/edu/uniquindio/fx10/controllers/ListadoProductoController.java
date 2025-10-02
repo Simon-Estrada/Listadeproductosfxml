@@ -1,19 +1,20 @@
 package co.edu.uniquindio.fx10.controllers;
 
+import co.edu.uniquindio.fx10.App;
 import co.edu.uniquindio.fx10.models.Producto;
 import co.edu.uniquindio.fx10.repositories.ProductoRepository;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
-
+import javafx.stage.Stage;
+import java.io.IOException;
 
 public class ListadoProductoController {
-
-    @FXML
-    private VBox contenedorListado;
 
     @FXML
     private TableView<Producto> tablaProductos;
@@ -33,11 +34,9 @@ public class ListadoProductoController {
     @FXML
     private TableColumn<Producto, Integer> colStock;
 
-    @FXML
-    private Button btnEliminar;
-
     private ProductoRepository productoRepository;
     private ObservableList<Producto> listaProductos;
+    private Stage mainStage;
 
     @FXML
     public void initialize() {
@@ -64,12 +63,24 @@ public class ListadoProductoController {
         cargarProductos();
     }
 
+    public void setMainStage(Stage stage) {
+        this.mainStage = stage;
+    }
+
     public void cargarProductos() {
         listaProductos = FXCollections.observableArrayList(productoRepository.getProductos());
         tablaProductos.setItems(listaProductos);
     }
 
+    @FXML
+    private void onCrearProducto() {
+        cargarEscena("/co/edu/uniquindio/fx10/vista/FormularioProducto.fxml", "Crear Producto");
+    }
 
+    @FXML
+    private void onVolverDashboard() {
+        cargarEscena("/co/edu/uniquindio/fx10/vista/Dashboard.fxml", "Sistema de Gestión de Productos");
+    }
 
     @FXML
     private void onEliminarProducto() {
@@ -94,6 +105,34 @@ public class ListadoProductoController {
         });
     }
 
+    private void cargarEscena(String fxmlPath, String titulo) {
+        if (mainStage == null) {
+            mostrarAlerta("Error", "La ventana principal no está configurada.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(App.class.getResource(fxmlPath));
+            Parent root = loader.load();
+
+            Object controller = loader.getController();
+
+            if (controller instanceof FormularioProductoController) {
+                ((FormularioProductoController) controller).setMainStage(mainStage);
+            } else if (controller instanceof DashboardController) {
+                ((DashboardController) controller).setMainStage(mainStage);
+            }
+
+            Scene scene = new Scene(root, 900, 600);
+            mainStage.setScene(scene);
+            mainStage.setTitle(titulo);
+
+        } catch (IOException e) {
+            mostrarAlerta("Error", "No se pudo cargar la escena", Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
+    }
+
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);
@@ -101,5 +140,4 @@ public class ListadoProductoController {
         alerta.setContentText(mensaje);
         alerta.showAndWait();
     }
-
 }
