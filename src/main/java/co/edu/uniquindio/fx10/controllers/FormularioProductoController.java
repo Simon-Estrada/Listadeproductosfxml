@@ -1,16 +1,12 @@
 package co.edu.uniquindio.fx10.controllers;
 
-import co.edu.uniquindio.fx10.App;
 import co.edu.uniquindio.fx10.models.Producto;
 import co.edu.uniquindio.fx10.repositories.ProductoRepository;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
+import javafx.event.ActionEvent;
 
-import java.io.IOException;
 
 public class FormularioProductoController {
 
@@ -30,20 +26,15 @@ public class FormularioProductoController {
     private TextField txtStock;
 
     private ProductoRepository productoRepository;
-    private ListadoProductoController listadoProductoController;
-    private VBox contenedorPrincipal;
+    private DashboardController dashboardController;
 
     @FXML
     public void initialize() {
         productoRepository = ProductoRepository.getInstancia();
     }
 
-    public void setListadoProductoController(ListadoProductoController listadoProductoController) {
-        this.listadoProductoController = listadoProductoController;
-    }
-
-    public void setContenedorPrincipal(VBox contenedorPrincipal) {
-        this.contenedorPrincipal = contenedorPrincipal;
+    public void setDashboardController(DashboardController dashboardController) {
+        this.dashboardController = dashboardController;
     }
 
     @FXML
@@ -56,51 +47,35 @@ public class FormularioProductoController {
             String codigo = txtCodigo.getText();
             String nombre = txtNombre.getText();
             String descripcion = txtDescripcion.getText();
-            double precio = Double.parseDouble(txtPrecio.getText());
-            int stock = Integer.parseInt(txtStock.getText());
+            double precio = Double.parseDouble(txtPrecio.getText().trim().replace(",", "."));
+            int stock = Integer.parseInt(txtStock.getText().trim());
 
             Producto nuevoProducto = new Producto(codigo, nombre, descripcion, precio, stock);
             productoRepository.agregarProducto(nuevoProducto);
 
             mostrarAlerta("Éxito", "Producto creado correctamente", Alert.AlertType.INFORMATION);
 
-            if (listadoProductoController != null) {
-                listadoProductoController.cargarProductos();
+            if (dashboardController != null) {
+                dashboardController.cargarListadoProductos();
+            } else {
+                mostrarAlerta("Error de Navegación", "Dashboard Controller no inyectado. No se puede volver al listado.", Alert.AlertType.ERROR);
             }
 
-            volverAListadoProductos();
 
         } catch (NumberFormatException e) {
-            mostrarAlerta("Error de formato", "El precio y/o stock no tienen un formato válido.", Alert.AlertType.ERROR);
+            mostrarAlerta("Error de formato", "El precio y/o stock deben ser números válidos.", Alert.AlertType.ERROR);
         }
     }
 
     @FXML
     private void onCancelar() {
-        volverAListadoProductos();
-    }
-
-    private void volverAListadoProductos() {
-        if (contenedorPrincipal == null) {
-            mostrarAlerta("Error de Navegación", "Contenedor principal no inyectado.", Alert.AlertType.ERROR);
-            return;
-        }
-
-        try {
-            FXMLLoader loader = new FXMLLoader(App.class.getResource("/co/edu/uniquindio/fx10/vista/ListadoProducto.fxml"));
-            Parent listado = loader.load();
-
-            ListadoProductoController controller = loader.getController();
-            controller.setContenedorPrincipal(contenedorPrincipal);
-
-            contenedorPrincipal.getChildren().clear();
-            contenedorPrincipal.getChildren().add(listado);
-
-        } catch (IOException e) {
-            mostrarAlerta("Error", "No se pudo volver a la lista de productos.", Alert.AlertType.ERROR);
-            e.printStackTrace();
+        if (dashboardController != null) {
+            dashboardController.cargarListadoProductos();
+        } else {
+            mostrarAlerta("Error", "No se puede volver al listado.", Alert.AlertType.ERROR);
         }
     }
+
 
     private boolean validarCampos() {
         if (txtCodigo.getText().trim().isEmpty() ||

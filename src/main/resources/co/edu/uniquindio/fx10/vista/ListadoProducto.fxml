@@ -6,12 +6,12 @@
 <?import javafx.scene.text.Font?>
 
 <VBox fx:id="contenedorListado"
-        xmlns="http://javafx.com/javafx"
+      xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="co.edu.uniquindio.fx10.controllers.ListadoProductoController"
       spacing="20"
       style="-fx-background-color: #f5f5f5;">
-    
+
     <padding>
         <Insets top="30" right="30" bottom="30" left="30"/>
     </padding>
@@ -22,12 +22,6 @@
             <Font name="System Bold" size="28"/>
         </font>
     </Label>
-    <Button fx:id="btnCrearProducto" text="+ Nuevo Producto" onAction="#onCrearProducto"
-            style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20; -fx-cursor: hand; -fx-background-radius: 5;">
-        <font>
-            <Font name="System Bold" size="14"/>
-        </font>
-    </Button>
 
     <!-- Tabla de productos -->
     <VBox VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
@@ -63,4 +57,3 @@
         </HBox>
     </VBox>
 </VBox>
-

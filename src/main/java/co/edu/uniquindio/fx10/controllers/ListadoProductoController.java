@@ -1,18 +1,14 @@
 package co.edu.uniquindio.fx10.controllers;
 
-import co.edu.uniquindio.fx10.App;
 import co.edu.uniquindio.fx10.models.Producto;
 import co.edu.uniquindio.fx10.repositories.ProductoRepository;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 
-import java.io.IOException;
 
 public class ListadoProductoController {
 
@@ -38,14 +34,10 @@ public class ListadoProductoController {
     private TableColumn<Producto, Integer> colStock;
 
     @FXML
-    private Button btnCrearProducto;
-
-    @FXML
     private Button btnEliminar;
 
     private ProductoRepository productoRepository;
     private ObservableList<Producto> listaProductos;
-    private VBox contenedorPrincipal;
 
     @FXML
     public void initialize() {
@@ -72,38 +64,12 @@ public class ListadoProductoController {
         cargarProductos();
     }
 
-    public void setContenedorPrincipal(VBox contenedorPrincipal) {
-        this.contenedorPrincipal = contenedorPrincipal;
-    }
-
     public void cargarProductos() {
         listaProductos = FXCollections.observableArrayList(productoRepository.getProductos());
         tablaProductos.setItems(listaProductos);
     }
 
-    @FXML
-    private void onCrearProducto() {
-        if (contenedorPrincipal == null) {
-            mostrarAlerta("Error", "Contenedor principal no configurado.", Alert.AlertType.ERROR);
-            return;
-        }
 
-        try {
-            FXMLLoader loader = new FXMLLoader(App.class.getResource("/co/edu/uniquindio/fx10/vista/FormularioProducto.fxml"));
-            Parent formulario = loader.load();
-
-            FormularioProductoController controller = loader.getController();
-            controller.setListadoProductoController(this);
-            controller.setContenedorPrincipal(contenedorPrincipal);
-
-            contenedorPrincipal.getChildren().clear();
-            contenedorPrincipal.getChildren().add(formulario);
-
-        } catch (IOException e) {
-            mostrarAlerta("Error", "No se pudo cargar el formulario", Alert.AlertType.ERROR);
-            e.printStackTrace();
-        }
-    }
 
     @FXML
     private void onEliminarProducto() {
