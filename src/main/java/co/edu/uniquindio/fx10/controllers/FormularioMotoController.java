@@ -1,8 +1,8 @@
 package co.edu.uniquindio.fx10.controllers;
 
 import co.edu.uniquindio.fx10.App;
-import co.edu.uniquindio.fx10.models.Producto;
-import co.edu.uniquindio.fx10.repositories.ProductoRepository;
+import co.edu.uniquindio.fx10.models.Moto;
+import co.edu.uniquindio.fx10.repositories.MotoRepository;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,29 +12,23 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import java.io.IOException;
 
-public class FormularioProductoController {
+public class FormularioMotoController {
 
     @FXML
-    private TextField txtCodigo;
+    private TextField txtPlaca;
 
     @FXML
-    private TextField txtNombre;
+    private TextField txtMarca;
 
     @FXML
-    private TextField txtDescripcion;
+    private TextField txtModelo;
 
-    @FXML
-    private TextField txtPrecio;
-
-    @FXML
-    private TextField txtStock;
-
-    private ProductoRepository productoRepository;
+    private MotoRepository motoRepository;
     private Stage mainStage;
 
     @FXML
     public void initialize() {
-        productoRepository = ProductoRepository.getInstancia();
+        motoRepository = MotoRepository.getInstancia();
     }
 
     public void setMainStage(Stage stage) {
@@ -48,16 +42,14 @@ public class FormularioProductoController {
         }
 
         try {
-            String codigo = txtCodigo.getText();
-            String nombre = txtNombre.getText();
-            String descripcion = txtDescripcion.getText();
-            double precio = Double.parseDouble(txtPrecio.getText().trim().replace(",", "."));
-            int stock = Integer.parseInt(txtStock.getText().trim());
+            String placa = txtPlaca.getText();
+            String marca = txtMarca.getText();
+            String modelo = txtModelo.getText();
 
-            Producto nuevoProducto = new Producto(codigo, nombre, descripcion, precio, stock);
-            productoRepository.agregarProducto(nuevoProducto);
+            Moto nuevoMoto = new Moto(placa, marca, modelo);
+            motoRepository.agregarMoto(nuevoMoto);
 
-            mostrarAlerta("Éxito", "Producto creado correctamente", Alert.AlertType.INFORMATION);
+            mostrarAlerta("Éxito", "Moto registrada correctamente", Alert.AlertType.INFORMATION);
 
             volverAlDashboard();
 
@@ -86,7 +78,7 @@ public class FormularioProductoController {
 
             Scene scene = new Scene(root, 900, 600);
             mainStage.setScene(scene);
-            mainStage.setTitle("Sistema de Gestión de Productos");
+            mainStage.setTitle("Sistema de registro de motos");
 
         } catch (IOException e) {
             mostrarAlerta("Error", "No se pudo cargar el Dashboard.", Alert.AlertType.ERROR);
@@ -95,11 +87,9 @@ public class FormularioProductoController {
     }
 
     private boolean validarCampos() {
-        if (txtCodigo.getText().trim().isEmpty() ||
-                txtNombre.getText().trim().isEmpty() ||
-                txtDescripcion.getText().trim().isEmpty() ||
-                txtPrecio.getText().trim().isEmpty() ||
-                txtStock.getText().trim().isEmpty())
+        if (txtPlaca.getText().trim().isEmpty() ||
+                txtMarca.getText().trim().isEmpty() ||
+                txtModelo.getText().trim().isEmpty())
         {
             mostrarAlerta("Error de validación", "Todos los campos son obligatorios.", Alert.AlertType.WARNING);
             return false;

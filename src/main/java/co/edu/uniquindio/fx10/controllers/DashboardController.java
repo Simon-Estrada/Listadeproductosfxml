@@ -18,13 +18,13 @@ public class DashboardController {
     }
 
     @FXML
-    private void onShowList(){
-        cargarEscena("/co/edu/uniquindio/fx10/vista/ListadoProducto.fxml", "Listado de Productos");
+    private void onShowlist(){
+        cargarEscena("/co/edu/uniquindio/fx10/vista/ListadoMoto.fxml", "Listado de Motos");
     }
 
     @FXML
     private void onCrearProducto() {
-        cargarEscena("/co/edu/uniquindio/fx10/vista/FormularioProducto.fxml", "Crear Producto");
+        cargarEscena("/co/edu/uniquindio/fx10/vista/FormularioMoto.fxml", "Nueva Moto");
     }
 
     private void cargarEscena(String fxmlPath, String titulo) {
@@ -39,10 +39,10 @@ public class DashboardController {
 
             Object controller = loader.getController();
 
-            if (controller instanceof FormularioProductoController) {
-                ((FormularioProductoController) controller).setMainStage(mainStage);
-            } else if (controller instanceof ListadoProductoController) {
-                ((ListadoProductoController) controller).setMainStage(mainStage);
+            if (controller instanceof FormularioMotoController) {
+                ((FormularioMotoController) controller).setMainStage(mainStage);
+            } else if (controller instanceof ListadoMotoController) {
+                ((ListadoMotoController) controller).setMainStage(mainStage);
             }
 
             Scene scene = new Scene(root, 900, 600);

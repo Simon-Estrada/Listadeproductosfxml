@@ -20,7 +20,7 @@ public class App extends Application {
 
         Scene scene = new Scene(root, 900, 600);
 
-        primaryStage.setTitle("Sistema de Gestión de Productos");
+        primaryStage.setTitle("Sistema de Gestión de Motos");
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(500);

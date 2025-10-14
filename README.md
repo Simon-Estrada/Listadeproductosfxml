@@ -58,8 +58,8 @@ fx10/
 ### Dashboard Principal
 
 - Visualiza todos los productos en una tabla
-- Haz clic en "Crear Producto" para agregar un nuevo producto
-- Selecciona un producto y haz clic en "Eliminar Producto" para eliminarlo
+- Haz clic en "Crear Producto" para agregar un nuevo moto
+- Selecciona un moto y haz clic en "Eliminar Producto" para eliminarlo
 
 ### Crear Producto
 
